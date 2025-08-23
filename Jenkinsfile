@@ -4,14 +4,24 @@ pipeline {
             yaml """
                 apiVersion: v1
                 kind: Pod
-                metadata:
-                  name: clab-dind
                 spec:
+                  volumes:
+                    - name: workspace-volume
+                      emptyDir: {}
                   containers:
-                  - name: containerlab
-                    image: maboco/clab-dind:latest
-                    securityContext:
-                      privileged: true
+                    - name: jnlp
+                      image: jenkins/inbound-agent:latest
+                      volumeMounts:
+                        - name: workspace-volume
+                          mountPath: /home/jenkins/agent
+                    - name: containerlab
+                      image: maboco/clab-dind:latest
+                      tty: true
+                      securityContext:
+                        privileged: true
+                      volumeMounts:
+                        - name: workspace-volume
+                          mountPath: /home/jenkins/agent
                 """
         }
     }
