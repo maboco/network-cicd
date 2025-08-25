@@ -34,7 +34,7 @@ pipeline {
     parameters {
         choice(
             name: 'TOPOLOGY', 
-            choices: ['pair'], 
+            choices: ['pair', 'clos'], 
             description: 'Network Topology')
     }
     stages {
@@ -44,6 +44,21 @@ pipeline {
                     git branch: "master", url: "https://github.com/maboco/network-iacs.git"
                 }
             }
+        }
+        stage('Deploy dev infra') {
+          steps {
+            dir('infra') {
+              container('ansible') {
+                def devFolder = "${params.TOPOLOGY}/infra/dev/"
+                sh """
+                  ansible localhost \
+                  -m ansible.builtin.template \
+                  -a "src=${devFolder}/topology.j2 dest=${devFolder}/topology.clab.yaml" \
+                  -e "@${devFolder}/inventory.yaml"
+                """
+              }
+            }
+          }
         }
     }
 }
