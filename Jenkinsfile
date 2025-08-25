@@ -22,6 +22,12 @@ pipeline {
                       volumeMounts:
                         - name: workspace-volume
                           mountPath: /home/jenkins/agent
+                    - name: ansible
+                      image: alpine/ansible:latest
+                      tty: true
+                      volumeMounts:
+                        - name: workspace-volume
+                          mountPath: /home/jenkins/agent       
                 """
         }
     }
