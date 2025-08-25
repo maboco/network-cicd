@@ -49,13 +49,16 @@ pipeline {
           steps {
             dir('infra') {
               container('ansible') {
-                def devFolder = "${params.TOPOLOGY}/infra/dev/"
-                sh """
-                  ansible localhost \
-                  -m ansible.builtin.template \
-                  -a "src=${devFolder}/topology.j2 dest=${devFolder}/topology.clab.yaml" \
-                  -e "@${devFolder}/inventory.yaml"
-                """
+                script {
+                  def devFolder = "${params.TOPOLOGY}/infra/dev/"
+                  
+                  sh """
+                    ansible localhost \
+                    -m ansible.builtin.template \
+                    -a "src=${devFolder}/topology.j2 dest=${devFolder}/topology.clab.yaml" \
+                    -e "@${devFolder}/inventory.yaml"
+                  """
+                }
               }
             }
           }
