@@ -25,6 +25,10 @@ pipeline {
                     - name: ansible
                       image: alpine/ansible:latest
                       tty: true
+                      command:
+                        - 'sh'
+                        - '-c'
+                        - 'sleep infinity'
                       volumeMounts:
                         - name: workspace-volume
                           mountPath: /home/jenkins/agent       
@@ -51,7 +55,7 @@ pipeline {
               container('ansible') {
                 script {
                   def devFolder = "${params.TOPOLOGY}/infra/dev/"
-                  
+
                   sh """
                     ansible localhost \
                     -m ansible.builtin.template \
