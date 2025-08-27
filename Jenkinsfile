@@ -53,7 +53,8 @@ pipeline {
           steps {
             dir('infra') {
               script {
-                def devFolder = "${params.TOPOLOGY}/infra/dev"
+                def workspace = pwd()
+                def devFolder = "${workspace}/${params.TOPOLOGY}/infra/dev"
 
                 container('ansible') {
                   sh """
