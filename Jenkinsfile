@@ -67,5 +67,18 @@ pipeline {
             }
           }
         }
+        stage('Generate config') {
+          steps {
+            dir('config') {
+              container('ansible') {
+                script {
+                  sh """
+                    ansible-playbook ${params.TOPOLOGY}/config/render-configs.yaml
+                  """
+                }
+              }
+            }
+          }
+        }
     }
 }
