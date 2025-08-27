@@ -67,7 +67,8 @@ pipeline {
 
                 container('containerlab') {
                   sh """
-                    containerlab deploy -f ${devFolder}/templates/topology.clab.yaml
+                    cd ${devFolder}/templates
+                    containerlab deploy
                   """
                 }
               }
@@ -76,7 +77,7 @@ pipeline {
         }
         stage('Generate config') {
           steps {
-            dir('config') {
+            dir('infra') {
               container('ansible') {
                 script {
                   sh """
