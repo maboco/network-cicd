@@ -59,8 +59,12 @@ pipeline {
                   sh """
                     ansible localhost \
                     -m ansible.builtin.template \
-                    -a "src=${devFolder}/topology.j2 dest=${devFolder}/topology.clab.yaml" \
+                    -a "src=${devFolder}/templates/topology.j2 dest=${devFolder}/templates/topology.clab.yaml" \
                     -e "@${devFolder}/inventory.yaml"
+                  """
+
+                  sh """
+                    containerlab deploy -f ${devFolder}/templates/topology.clab.yaml
                   """
                 }
               }
