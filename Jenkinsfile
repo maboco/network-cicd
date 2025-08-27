@@ -52,20 +52,24 @@ pipeline {
         stage('Deploy dev infra') {
           steps {
             dir('infra') {
-              container('ansible') {
-                script {
-                  def devFolder = "${params.TOPOLOGY}/infra/dev/"
+              script {
+                container('ansible') {
+                  script {
+                    def devFolder = "${params.TOPOLOGY}/infra/dev"
 
-                  sh """
-                    ansible localhost \
-                    -m ansible.builtin.template \
-                    -a "src=${devFolder}/templates/topology.j2 dest=${devFolder}/templates/topology.clab.yaml" \
-                    -e "@${devFolder}/inventory.yaml"
-                  """
-
-                  sh """
-                    containerlab deploy -f ${devFolder}/templates/topology.clab.yaml
-                  """
+                    sh """
+                      ansible localhost \
+                      -m ansible.builtin.template \
+                      -a "src=${devFolder}/templates/topology.j2 dest=${devFolder}/templates/topology.clab.yaml" \
+                      -e "@${devFolder}/inventory.yaml"
+                    """
+                  }
+                }
+                
+                container('containerlab') {
+                    sh """
+                      containerlab deploy -f ${devFolder}/templates/topology.clab.yaml
+                    """
                 }
               }
             }
