@@ -61,7 +61,7 @@ pipeline {
                     ansible localhost \
                     -m ansible.builtin.template \
                     -a "src=${devFolder}/templates/topology.j2 dest=${devFolder}/templates/topology.clab.yaml" \
-                    -e "@${devFolder}/inventory.yaml"
+                    -e "@${devFolder}/resources.yaml"
                   """
                 }
 
